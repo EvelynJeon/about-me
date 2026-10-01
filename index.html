@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Evelyn Jeon | BU Student</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='28' y='46' width='8' height='14' fill='%235b3a1e'/%3E%3Cpolygon points='32,4 50,26 14,26' fill='%231f8a33'/%3E%3Cpolygon points='32,16 54,42 10,42' fill='%232aa043'/%3E%3C/svg%3E">
+<script>
+  (function () {
+    var t;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
 <style>
   :root {
     --bg: #F9F6E8;
@@ -11,7 +20,22 @@
     --ink: #1d2a1f;
     --muted: #4e5e50;
     --line: rgba(10, 55, 17, 0.25);
+    --hover: rgba(10, 55, 17, 0.06);
+    --panel: #0A3711;
+    --on-panel: #F9F6E8;
     --header-h: 60px;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1a0f;
+    --accent: #9BD6A3;
+    --ink: #F9F6E8;
+    --muted: #b9c4b4;
+    --line: rgba(155, 214, 163, 0.3);
+    --hover: rgba(155, 214, 163, 0.1);
+    --panel: #134a1c;
+    --on-panel: #F9F6E8;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html {
@@ -24,9 +48,10 @@
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   a { color: inherit; }
-  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
   /* Sticky header */
   .topbar {
@@ -36,35 +61,49 @@
     height: var(--header-h);
     background: var(--bg);
     border-bottom: 1px solid var(--line);
+    transition: background-color 0.3s ease;
   }
   .topbar-inner {
     max-width: 680px;
     height: 100%;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
   }
   .brand {
     font-family: Georgia, "Times New Roman", serif;
     font-weight: 700;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     color: var(--accent);
     text-decoration: none;
     white-space: nowrap;
+    margin-right: auto;
   }
-  nav { display: flex; gap: 20px; }
+  nav { display: flex; gap: 14px; }
   nav a {
     text-decoration: none;
     color: var(--accent);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     padding: 6px 0;
     background: linear-gradient(var(--accent), var(--accent)) left bottom / 0 2px no-repeat;
     transition: background-size 0.3s ease;
   }
-  nav a:hover, nav a:focus-visible { background-size: 100% 2px; }
+  nav a:hover, nav a:focus-visible, nav a[aria-current="page"] { background-size: 100% 2px; }
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .theme-toggle:hover { background: var(--accent); color: var(--bg); transform: rotate(20deg); }
   .progress {
     position: absolute;
     left: 0; right: 0; bottom: -1px;
@@ -77,8 +116,8 @@
 
   /* Hero */
   .hero {
-    background: var(--accent);
-    color: var(--bg);
+    background: var(--panel);
+    color: var(--on-panel);
     padding: 56px 24px 48px;
   }
   .hero-inner, main, .contact-inner { max-width: 680px; margin: 0 auto; }
@@ -96,7 +135,7 @@
   .hero-inner > :nth-child(3) { animation-delay: 0.24s; }
 
   /* Content */
-  main { padding: 16px 24px 32px; }
+  main { padding: 16px 24px 48px; }
   .block { padding: 36px 0; border-bottom: 1px solid var(--line); }
   .block:last-child { border-bottom: none; }
   h2 {
@@ -110,19 +149,27 @@
   dd { font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; color: var(--accent); }
   ul { list-style: none; }
   li {
-    padding: 14px 0 14px 18px;
     border-left: 3px solid var(--accent);
     margin-bottom: 14px;
     font-size: 1.1rem;
-    transition: transform 0.25s ease, padding-left 0.25s ease, background-color 0.25s ease;
+    transition: padding-left 0.25s ease, background-color 0.25s ease;
   }
-  li:hover { padding-left: 26px; background: rgba(10, 55, 17, 0.06); }
+  li > span, li > a { display: block; padding: 14px 0 14px 18px; text-decoration: none; }
+  li:hover { background: var(--hover); }
+  li:hover > span, li:hover > a { padding-left: 26px; }
+  li > span, li > a { transition: padding-left 0.25s ease; }
   li small { display: block; color: var(--muted); font-size: 0.95rem; }
+  .song small::before { content: "\25B6\00a0"; color: var(--accent); }
 
-  /* Contact */
-  #contact { background: var(--accent); color: var(--bg); padding: 56px 24px 64px; }
-  #contact h2 { color: var(--bg); font-size: 2rem; margin-bottom: 8px; }
-  #contact .lead { opacity: 0.9; margin-bottom: 28px; }
+  /* Contact page */
+  #contact {
+    background: var(--panel);
+    color: var(--on-panel);
+    padding: 56px 24px 64px;
+    min-height: calc(100vh - var(--header-h) - 72px);
+  }
+  #contact h1 { font-size: clamp(2.4rem, 12vw, 4rem); margin-bottom: 12px; }
+  #contact .lead { opacity: 0.9; margin-bottom: 28px; font-size: 1.1rem; }
   .contact-list { display: grid; gap: 14px; }
   .contact-card {
     display: block;
@@ -140,11 +187,11 @@
     overflow-wrap: anywhere;
   }
   .contact-card:hover, .contact-card:focus-visible {
-    background: var(--bg);
-    color: var(--accent);
+    background: var(--on-panel);
+    color: var(--panel);
     transform: translateY(-3px);
   }
-  #contact a:focus-visible { outline-color: var(--bg); }
+  #contact a:focus-visible { outline-color: var(--on-panel); }
   footer { text-align: center; padding: 24px; color: var(--muted); font-size: 0.9rem; }
 
   @keyframes enter {
@@ -168,6 +215,8 @@
     dl { grid-template-columns: 1fr 1fr; gap: 32px; }
     .contact-list { grid-template-columns: 1fr 1fr; }
     .brand { font-size: 1.25rem; }
+    nav { gap: 20px; }
+    nav a { font-size: 0.95rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -179,61 +228,333 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="brand" href="#about">Evelyn Jeon</a>
-      <nav aria-label="Sections">
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+      <a class="brand" href="index.html">Evelyn Jeon</a>
+      <nav aria-label="Pages">
+        <a href="index.html" aria-current="page">About</a>
+        <a href="contact.html">Contact</a>
       </nav>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">&#9790;</button>
     </div>
     <div class="progress" aria-hidden="true"></div>
   </header>
 
-  <section id="about" aria-label="About">
-    <div class="hero">
-      <div class="hero-inner">
-        <p class="school">Boston University</p>
-        <h1>Evelyn Jeon</h1>
-        <p class="tagline">Computer science student who likes good songs, warm drinks, and a long movie night.</p>
-      </div>
+  <section class="hero" aria-label="Introduction">
+    <div class="hero-inner">
+      <p class="school">Boston University</p>
+      <h1>Evelyn Jeon</h1>
+      <p class="tagline">Computer science student who likes good songs, warm drinks, and a long movie night.</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="block reveal">
+      <h2>What I study</h2>
+      <dl>
+        <div>
+          <dt>Major</dt>
+          <dd>Computer Science</dd>
+        </div>
+        <div>
+          <dt>Minor</dt>
+          <dd>Business Administration</dd>
+        </div>
+      </dl>
     </div>
 
-    <main>
-      <div class="block reveal">
-        <h2>What I study</h2>
-        <dl>
-          <div>
-            <dt>Major</dt>
-            <dd>Computer Science</dd>
-          </div>
-          <div>
-            <dt>Minor</dt>
-            <dd>Business Administration</dd>
-          </div>
-        </dl>
-      </div>
+    <div class="block reveal">
+      <h2>Songs on repeat</h2>
+      <ul>
+        <li>
+          <a class="song" href="https://www.youtube.com/results?search_query=bad+wave+to+earth" target="_blank" rel="noopener">
+            Bad
+            <small>wave to earth, play on YouTube</small>
+          </a>
+        </li>
+        <li>
+          <a class="song" href="https://www.youtube.com/results?search_query=beautiful+bazzi" target="_blank" rel="noopener">
+            Beautiful
+            <small>Bazzi, play on YouTube</small>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-      <div class="block reveal">
-        <h2>Songs on repeat</h2>
-        <ul>
-          <li>Bad <small>wave to earth</small></li>
-          <li>Beautiful <small>Bazzi</small></li>
-        </ul>
-      </div>
+    <div class="block reveal">
+      <h2>Things I love</h2>
+      <ul>
+        <li><span>Mango smoothie at an all-inclusive resort</span></li>
+        <li><span>Hot chocolate at the top of the ski slope</span></li>
+        <li><span>Movie night</span></li>
+      </ul>
+    </div>
+  </main>
 
-      <div class="block reveal">
-        <h2>Things I love</h2>
-        <ul>
-          <li>Mango smoothie at an all-inclusive resort</li>
-          <li>Hot chocolate at the top of the ski slope</li>
-          <li>Movie night</li>
-        </ul>
-      </div>
-    </main>
-  </section>
+  <footer>&copy; Evelyn Jeon</footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      function sync() {
+        var dark = root.getAttribute('data-theme') === 'dark';
+        btn.textContent = dark ? '\u2600' : '\u263E';
+        btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      }
+      sync();
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        sync();
+      });
+    })();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact | Evelyn Jeon</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='28' y='46' width='8' height='14' fill='%235b3a1e'/%3E%3Cpolygon points='32,4 50,26 14,26' fill='%231f8a33'/%3E%3Cpolygon points='32,16 54,42 10,42' fill='%232aa043'/%3E%3C/svg%3E">
+<script>
+  (function () {
+    var t;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  :root {
+    --bg: #F9F6E8;
+    --accent: #0A3711;
+    --ink: #1d2a1f;
+    --muted: #4e5e50;
+    --line: rgba(10, 55, 17, 0.25);
+    --hover: rgba(10, 55, 17, 0.06);
+    --panel: #0A3711;
+    --on-panel: #F9F6E8;
+    --header-h: 60px;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1a0f;
+    --accent: #9BD6A3;
+    --ink: #F9F6E8;
+    --muted: #b9c4b4;
+    --line: rgba(155, 214, 163, 0.3);
+    --hover: rgba(155, 214, 163, 0.1);
+    --panel: #134a1c;
+    --on-panel: #F9F6E8;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--header-h);
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  /* Sticky header */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: var(--header-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.3s ease;
+  }
+  .topbar-inner {
+    max-width: 680px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-right: auto;
+  }
+  nav { display: flex; gap: 14px; }
+  nav a {
+    text-decoration: none;
+    color: var(--accent);
+    font-size: 0.92rem;
+    padding: 6px 0;
+    background: linear-gradient(var(--accent), var(--accent)) left bottom / 0 2px no-repeat;
+    transition: background-size 0.3s ease;
+  }
+  nav a:hover, nav a:focus-visible, nav a[aria-current="page"] { background-size: 100% 2px; }
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .theme-toggle:hover { background: var(--accent); color: var(--bg); transform: rotate(20deg); }
+  .progress {
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    display: none;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--panel);
+    color: var(--on-panel);
+    padding: 56px 24px 48px;
+  }
+  .hero-inner, main, .contact-inner { max-width: 680px; margin: 0 auto; }
+  .school { font-size: 1rem; opacity: 0.85; margin-bottom: 12px; }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 15vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .tagline { margin-top: 20px; font-size: 1.1rem; max-width: 30em; opacity: 0.92; }
+  .hero-inner > * { animation: enter 0.8s ease both; }
+  .hero-inner > :nth-child(2) { animation-delay: 0.12s; }
+  .hero-inner > :nth-child(3) { animation-delay: 0.24s; }
+
+  /* Content */
+  main { padding: 16px 24px 48px; }
+  .block { padding: 36px 0; border-bottom: 1px solid var(--line); }
+  .block:last-child { border-bottom: none; }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  dl { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  dt { font-size: 0.95rem; color: var(--muted); }
+  dd { font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; color: var(--accent); }
+  ul { list-style: none; }
+  li {
+    border-left: 3px solid var(--accent);
+    margin-bottom: 14px;
+    font-size: 1.1rem;
+    transition: padding-left 0.25s ease, background-color 0.25s ease;
+  }
+  li > span, li > a { display: block; padding: 14px 0 14px 18px; text-decoration: none; }
+  li:hover { background: var(--hover); }
+  li:hover > span, li:hover > a { padding-left: 26px; }
+  li > span, li > a { transition: padding-left 0.25s ease; }
+  li small { display: block; color: var(--muted); font-size: 0.95rem; }
+  .song small::before { content: "\25B6\00a0"; color: var(--accent); }
+
+  /* Contact page */
+  #contact {
+    background: var(--panel);
+    color: var(--on-panel);
+    padding: 56px 24px 64px;
+    min-height: calc(100vh - var(--header-h) - 72px);
+  }
+  #contact h1 { font-size: clamp(2.4rem, 12vw, 4rem); margin-bottom: 12px; }
+  #contact .lead { opacity: 0.9; margin-bottom: 28px; font-size: 1.1rem; }
+  .contact-list { display: grid; gap: 14px; }
+  .contact-card {
+    display: block;
+    text-decoration: none;
+    padding: 18px 20px;
+    border: 1.5px solid rgba(249, 246, 232, 0.55);
+    border-radius: 6px;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .contact-card span { display: block; font-size: 0.9rem; opacity: 0.8; }
+  .contact-card strong {
+    display: block;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.2rem;
+    overflow-wrap: anywhere;
+  }
+  .contact-card:hover, .contact-card:focus-visible {
+    background: var(--on-panel);
+    color: var(--panel);
+    transform: translateY(-3px);
+  }
+  #contact a:focus-visible { outline-color: var(--on-panel); }
+  footer { text-align: center; padding: 24px; color: var(--muted); font-size: 0.9rem; }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Scroll-driven effects (progressive enhancement) */
+  @supports (animation-timeline: scroll()) {
+    .progress { display: block; animation: grow linear both; animation-timeline: scroll(root block); }
+    .reveal {
+      animation: enter linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    @keyframes grow { to { transform: scaleX(1); } }
+  }
+
+  @media (min-width: 600px) {
+    .hero { padding: 88px 24px 64px; }
+    dl { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .contact-list { grid-template-columns: 1fr 1fr; }
+    .brand { font-size: 1.25rem; }
+    nav { gap: 20px; }
+    nav a { font-size: 0.95rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .progress { display: none !important; }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">Evelyn Jeon</a>
+      <nav aria-label="Pages">
+        <a href="index.html">About</a>
+        <a href="contact.html" aria-current="page">Contact</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">&#9790;</button>
+    </div>
+    <div class="progress" aria-hidden="true"></div>
+  </header>
 
   <section id="contact" aria-label="Contact">
     <div class="contact-inner reveal">
-      <h2>Contact</h2>
+      <h1>Contact</h1>
       <p class="lead">Email or call me anytime.</p>
       <div class="contact-list">
         <a class="contact-card" href="mailto:az01056071249@gmail.com">
@@ -249,5 +570,25 @@
   </section>
 
   <footer>&copy; Evelyn Jeon</footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      function sync() {
+        var dark = root.getAttribute('data-theme') === 'dark';
+        btn.textContent = dark ? '\u2600' : '\u263E';
+        btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+        btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      }
+      sync();
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        sync();
+      });
+    })();
+  </script>
 </body>
 </html>
